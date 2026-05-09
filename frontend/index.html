@@ -1,57 +1,83 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#185fa5" />
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MDTSBSJ5');</script>
-    <!-- End Google Tag Manager -->
+<head>
 
-    <!-- Primary -->
-    <title>Weblyne — Web Design & Development Studio in Biratnagar, Nepal</title>
-    <meta name="description" content="Weblyne is a Biratnagar-based web studio building modern websites, web apps and SEO for Nepali businesses. Crafted locally, built to global standards." />
-    <meta name="keywords" content="web design Biratnagar, web development Nepal, website agency Biratnagar, SEO Nepal, web app Nepal, ecommerce Nepal, Weblyne" />
-    <meta name="author" content="Weblyne" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
-    <link rel="canonical" href="https://weblyne.vercel.app/" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#185fa5" />
 
-    <!-- Icons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+  <!-- ═══ Security headers (meta-tag layer — real headers are set by backend/CDN) ═══ -->
+  <!--
+      CSP notes:
+      • script-src needs 'unsafe-inline' because Google Tag Manager injects inline scripts.
+        In production, replace with a nonce-based or hash-based CSP when GTM supports it.
+      • style-src 'unsafe-inline' is required by React inline styles and GTM.
+      • font-src fonts.gstatic.com — Google Fonts.
+      • connect-src covers the Vercel API proxy and GTM data collection.
+    -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
+  <!-- ════════════════════════════════════════════════════════════════════════════ -->
 
-    <!-- Open Graph (Facebook, LinkedIn, WhatsApp link previews) -->
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Weblyne" />
-    <meta property="og:locale" content="en_NP" />
-    <meta property="og:url" content="https://weblyne.vercel.app/" />
-    <meta property="og:title" content="Weblyne — Web Design & Development Studio in Biratnagar, Nepal" />
-    <meta property="og:description" content="Modern websites, web apps and SEO for Nepali businesses. Founder-led, online-first, built from Biratnagar." />
-    <meta property="og:image" content="https://weblyne.vercel.app/og-image.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Weblyne — Web studio in Biratnagar, Nepal" />
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-MDTSBSJ5');</script>
+  <!-- End Google Tag Manager -->
 
-    <!-- Twitter / X -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@HWFH13" />
-    <meta name="twitter:creator" content="@HWFH13" />
-    <meta name="twitter:title" content="Weblyne — Web Studio in Biratnagar, Nepal" />
-    <meta name="twitter:description" content="Modern websites, web apps and SEO for Nepali businesses. Founder-led, online-first." />
-    <meta name="twitter:image" content="https://weblyne.vercel.app/og-image.png" />
+  <!-- Primary -->
+  <title>Weblyne — Web Design & Development Studio in Biratnagar, Nepal</title>
+  <meta name="description"
+    content="Weblyne is a Biratnagar-based web studio building modern websites, web apps and SEO for Nepali businesses. Crafted locally, built to global standards." />
+  <meta name="keywords"
+    content="web design Biratnagar, web development Nepal, website agency Biratnagar, SEO Nepal, web app Nepal, ecommerce Nepal, Weblyne" />
+  <meta name="author" content="Weblyne" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <link rel="canonical" href="https://weblyne.vercel.app/" />
 
-    <!-- Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Icons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/favicon.svg" />
 
-    <!-- Structured data: Organization + LocalBusiness + WebSite -->
-    <script type="application/ld+json">
+  <!-- Open Graph (Facebook, LinkedIn, WhatsApp link previews) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Weblyne" />
+  <meta property="og:locale" content="en_NP" />
+  <meta property="og:url" content="https://weblyne.vercel.app/" />
+  <meta property="og:title" content="Weblyne — Web Design & Development Studio in Biratnagar, Nepal" />
+  <meta property="og:description"
+    content="Modern websites, web apps and SEO for Nepali businesses. Founder-led, online-first, built from Biratnagar." />
+  <meta property="og:image" content="https://weblyne.vercel.app/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Weblyne — Web studio in Biratnagar, Nepal" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@HWFH13" />
+  <meta name="twitter:creator" content="@HWFH13" />
+  <meta name="twitter:title" content="Weblyne — Web Studio in Biratnagar, Nepal" />
+  <meta name="twitter:description"
+    content="Modern websites, web apps and SEO for Nepali businesses. Founder-led, online-first." />
+  <meta name="twitter:image" content="https://weblyne.vercel.app/og-image.png" />
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <!-- Structured data: Organization + LocalBusiness + WebSite -->
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
@@ -120,13 +146,15 @@
       ]
     }
     </script>
-  </head>
-  <body>
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MDTSBSJ5"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MDTSBSJ5" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

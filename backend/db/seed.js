@@ -76,7 +76,8 @@ For a domestic shop: eSewa as primary, Khalti as fallback. For a mixed audience:
 (async () => {
   try {
     // 1) Admin user
-    const hash = await bcrypt.hash(ADMIN_PASSWORD, 10);
+    // Use bcrypt cost factor 12 — minimum recommended for 2024+ hardware.
+    const hash = await bcrypt.hash(ADMIN_PASSWORD, 12);
     await pool.query(
       `INSERT INTO admins (email, password_hash, name)
        VALUES ($1, $2, $3)
@@ -104,9 +105,10 @@ For a domestic shop: eSewa as primary, Khalti as fallback. For a mixed audience:
     console.log(`[seed] ${POSTS.length} blog posts upserted`);
 
     console.log('\n[seed] done. Sign in with:');
-    console.log(`  email:    ${ADMIN_EMAIL}`);
-    console.log(`  password: ${ADMIN_PASSWORD}`);
-    console.log('Change the password immediately if this is not local-only.');
+    console.log(`  email: ${ADMIN_EMAIL}`);
+    // SECURITY: never log the plain-text password — check your .env for the value.
+    console.log('  password: <see SEED_ADMIN_PASSWORD in .env>');
+    console.log('Change the password immediately after first login.');
   } catch (err) {
     console.error('[seed] failed:', err.message);
     process.exitCode = 1;

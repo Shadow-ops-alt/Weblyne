@@ -246,6 +246,73 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 6px;
 }
 
+/* ============== form validation states ============== */
+
+/* Wrapper that carries the state class */
+.wb-field-wrap { position: relative; }
+
+/* Error state — red border + glow */
+.wb-field--error .wb-input,
+.wb-field--error .wb-select,
+.wb-field--error .wb-textarea {
+  border-color: #d9363e !important;
+  box-shadow: 0 0 0 3px rgba(217, 54, 62, 0.12) !important;
+}
+
+/* Valid state — green border */
+.wb-field--valid .wb-input,
+.wb-field--valid .wb-select,
+.wb-field--valid .wb-textarea {
+  border-color: var(--color-teal) !important;
+  box-shadow: 0 0 0 3px rgba(29, 158, 117, 0.10) !important;
+}
+
+/* Inline error message below field */
+.wb-field-error {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #c0392b;
+  animation: wb-fade-up 0.18s ease both;
+  line-height: 1.4;
+}
+
+/* Green checkmark shown inline in the label */
+.wb-field-check {
+  margin-left: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-teal);
+}
+
+/* Row below textarea that holds error message + char counter */
+.wb-field-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 5px;
+  min-height: 18px;
+}
+
+/* Character counter for textarea */
+.wb-char-count {
+  font-size: 11px;
+  color: var(--color-text-faint);
+  margin-left: auto;
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+.wb-char-count--warn { color: #d97706; font-weight: 600; }
+
+/* Disabled submit button */
+.wb-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
 /* ============== animations ============== */
 @keyframes wb-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes wb-fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }

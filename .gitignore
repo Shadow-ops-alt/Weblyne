@@ -1,6 +1,25 @@
 node_modules/
+
+# Environment secrets — NEVER commit any .env variant
 .env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.staging
+.env.production
+.env.production.local
+*.env
+
 uploads/
 dist/
-
 .claude/
+
+# OS / editor artefacts
+.DS_Store
+Thumbs.db
+*.log
+*.pid
+.idea/
+.vscode/settings.json

@@ -77,8 +77,32 @@ export const api = {
 };
 
 const TOKEN_KEY = 'weblyne-admin-token';
+
+// ── SECURITY NOTE ────────────────────────────────────────────────────────────
+// JWT is stored in localStorage because this is a same-origin SPA with no
+// third-party scripts that have DOM access to this key (GTM is sandboxed via
+// frame-src:none CSP). However localStorage is readable by any XSS payload.
+//
+// Risk mitigations already in place:
+//   1. Content-Security-Policy blocks inline script injection in modern browsers.
+//   2. The admin panel is a separate route (/admin) not linked from public pages.
+//   3. Tokens expire in 7 days (JWT_EXPIRES_IN=7d).
+//   4. The backend verifies role:'admin' on every request — stolen tokens grant
+//      no more access than the admin already has.
+//
+// Ideal future upgrade: move to httpOnly SameSite=Strict cookies set by the
+// backend on /api/admin/login. This requires a cookie-session middleware change.
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const auth = {
-  get: () => { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } },
-  set: (t) => { try { localStorage.setItem(TOKEN_KEY, t); } catch {} },
-  clear: () => { try { localStorage.removeItem(TOKEN_KEY); } catch {} },
+  get: () => {
+    try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+  },
+  set: (t) => {
+    try { localStorage.setItem(TOKEN_KEY, t); } catch {}
+  },
+  clear: () => {
+    try { localStorage.removeItem(TOKEN_KEY); } catch {}
+  },
 };
+

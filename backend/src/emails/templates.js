@@ -1,5 +1,7 @@
 // Branded HTML email templates for Weblyne.
 // Inline styles only — most clients strip <style>.
+// SECURITY: ALL user-supplied values MUST pass through escape() before
+// being interpolated into HTML. Never pass raw strings as bodyHtml or intro.
 
 const BRAND = {
   blue: '#185fa5',
@@ -10,15 +12,32 @@ const BRAND = {
   line: '#e2e8f1',
 };
 
+/** HTML-escape a value so it is safe to interpolate into HTML attributes or text. */
 function escape(s = '') {
   return String(s)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;');
 }
 
+/**
+ * Shell email layout.
+ * @param {object} opts
+ * @param {string} opts.heading     - Plain text; will be escaped.
+ * @param {string} [opts.intro]     - Plain text; will be escaped and wrapped in <p>.
+ * @param {string} [opts.bodyHtml]  - Pre-built HTML fragment — MUST only contain
+ *                                    values that have already been escaped.
+ * @param {string} [opts.ctaLabel]  - Plain text; will be escaped.
+ * @param {string} [opts.ctaUrl]    - Must be a safe URL (validated at call site).
+ * @param {string} [opts.footerNote]- Plain text; will be escaped.
+ */
 function shell({ heading, intro, bodyHtml, ctaLabel, ctaUrl, footerNote }) {
+  // Validate ctaUrl — only allow http/https schemes to prevent javascript: URIs.
+  const safeCtaUrl = ctaUrl && /^https?:\/\//i.test(ctaUrl) ? ctaUrl : null;
+
   return `<!doctype html>
 <html><head><meta charset="utf-8"><title>${escape(heading)}</title></head>
 <body style="margin:0;padding:0;background:${BRAND.bg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:${BRAND.ink};">
@@ -34,18 +53,18 @@ function shell({ heading, intro, bodyHtml, ctaLabel, ctaUrl, footerNote }) {
         <tr>
           <td style="padding:32px;">
             <h1 style="margin:0 0 12px;font-size:22px;line-height:1.25;color:${BRAND.ink};">${escape(heading)}</h1>
-            ${intro ? `<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.muted};">${intro}</p>` : ''}
+            ${intro ? `<p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BRAND.muted};">${escape(intro)}</p>` : ''}
             ${bodyHtml || ''}
-            ${ctaLabel && ctaUrl ? `
+            ${safeCtaUrl && ctaLabel ? `
               <div style="margin:28px 0 8px;">
-                <a href="${escape(ctaUrl)}" style="display:inline-block;background:${BRAND.blue};color:white;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:600;font-size:14px;">${escape(ctaLabel)}</a>
+                <a href="${escape(safeCtaUrl)}" style="display:inline-block;background:${BRAND.blue};color:white;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:600;font-size:14px;">${escape(ctaLabel)}</a>
               </div>
             ` : ''}
           </td>
         </tr>
         <tr>
           <td style="padding:20px 32px;background:${BRAND.bg};font-size:12px;color:${BRAND.muted};border-top:1px solid ${BRAND.line};">
-            ${footerNote || 'Weblyne · Main Road, Biratnagar · hello@weblyne.np'}
+            ${escape(footerNote || 'Weblyne · Main Road, Biratnagar · hello@weblyne.np')}
           </td>
         </tr>
       </table>
@@ -77,7 +96,7 @@ export function adminNotificationEmail(c) {
 
   const subject = `New enquiry: ${c.name} — ${c.service || 'general'}`;
   const text = [
-    `New enquiry on weblyne.np`,
+    'New enquiry on weblyne.np',
     `Name: ${c.name}`,
     `Email: ${c.email}`,
     `Phone: ${c.phone || '—'}`,
@@ -87,19 +106,27 @@ export function adminNotificationEmail(c) {
     c.description || '',
   ].join('\n');
 
+  // ctaUrl must be a safe absolute URL — use FRONTEND_URL env or fall back to
+  // the known production domain (never allow user-supplied values here).
+  const adminUrl = process.env.FRONTEND_URL
+    ? `${process.env.FRONTEND_URL}/admin`
+    : 'https://weblyne.vercel.app/admin';
+
   const html = shell({
     heading: 'New project enquiry',
     intro: 'A new enquiry just came through your website.',
     bodyHtml,
     ctaLabel: 'Open admin dashboard',
-    ctaUrl: `${process.env.FRONTEND_URL || ''}/admin`,
+    ctaUrl: adminUrl,
   });
 
   return { subject, html, text };
 }
 
 export function clientConfirmationEmail(c) {
-  const subject = `We got your enquiry, ${c.name?.split(' ')[0] || 'there'} — Weblyne`;
+  const firstName = escape((c.name || 'there').split(' ')[0]);
+  const subject = `We got your enquiry, ${(c.name || 'there').split(' ')[0]} — Weblyne`;
+
   const bodyHtml = `
     <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:${BRAND.ink};">
       Thanks for reaching out about <strong>${escape(c.service || 'your project')}</strong>.
@@ -110,17 +137,22 @@ export function clientConfirmationEmail(c) {
     </p>
     <div style="margin-top:20px;padding:14px 16px;background:${BRAND.bg};border-radius:10px;border:1px solid ${BRAND.line};font-size:13px;color:${BRAND.muted};">
       <strong style="color:${BRAND.ink};">Your enquiry summary</strong><br/>
-      ${escape(c.description || '').slice(0, 400)}
+      ${escape((c.description || '').slice(0, 400))}
     </div>
   `;
-  const text = `Hi ${c.name},\n\nThanks for reaching out about ${c.service || 'your project'}. We'll reply within 24 hours.\n\n— Weblyne\nhello@weblyne.np`;
+
+  const text = `Hi ${(c.name || 'there').split(' ')[0]},\n\nThanks for reaching out about ${c.service || 'your project'}. We'll reply within 24 hours.\n\n— Weblyne\nhello@weblyne.np`;
+
+  const frontendUrl = process.env.FRONTEND_URL || 'https://weblyne.vercel.app';
+
   const html = shell({
-    heading: `Thanks, ${escape((c.name || 'there').split(' ')[0])}.`,
-    intro: 'We received your project enquiry. Here\'s what happens next.',
+    heading: `Thanks, ${firstName}.`,
+    intro: "We received your project enquiry. Here's what happens next.",
     bodyHtml,
     ctaLabel: 'Visit weblyne.np',
-    ctaUrl: process.env.FRONTEND_URL || 'https://weblyne.np',
-    footerNote: 'You\'re receiving this because you submitted an enquiry on weblyne.np.',
+    ctaUrl: frontendUrl,
+    footerNote: "You're receiving this because you submitted an enquiry on weblyne.np.",
   });
+
   return { subject, html, text };
 }
